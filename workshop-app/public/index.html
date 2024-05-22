@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My WorkShop App</title>
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+        font-family: Arial, sans-serif;
+        text-align: center;
+      }
+      img {
+        max-width: 100%;
+        height: auto;
+      }
+      .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 25vh;
+      }
+      .content {
+        margin: 20px;
+      }
+    </style>
+    <script>
+      async function fetchSentence() {
+        try {
+          const res = await fetch('/randomsentence');
+          const data = await res.json();
+          document.getElementById('randomtext').textContent = data.sentence;
+        } catch (error) {
+          console.error('Error when fetching random sentence', error);
+        }
+      }
+      window.addEventListener('load', fetchSentence);
+    </script>
+  </head>
+  <body>
+    <div class="content">
+      <div class="container">
+        <img src="./images/myimage.png" alt="Sample Image" />
+        <h2 id="randomtext"></h2>
+      </div>
+
+      <div class="container">
+        Repository :
+        <a href="https://github.com/rajuguruswamy/myrepo"
+          >https://github.com/rajuguruswamy/myrepo</a
+        >
+      </div>
+    </div>
+  </body>
+</html>
