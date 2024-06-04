@@ -30,6 +30,17 @@ kubectl get secrets -n bggns
      kubectl describe  service bggdb-svc -n bggns
 
 
+9. delete namespace, configmap and secret
+    kubectl delete -f config.yaml
+   
+
+10. delete db deployment and services
+    kubectl delete -f bggdb.yaml
+
+11. delete  app deployment and services
+    kubectl delete -f bggapp.yaml
+
+
 
 
     
