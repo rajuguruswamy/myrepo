@@ -163,3 +163,58 @@ docker run –d --network app-net --name db northwind-db:v1
 docker run –d –p 8080:3000 -v data:/app/public --network app-net --name app nortwind-app:v1
 
 # Docker Networking - Macvlan
+
+## docker compose
+
+    docker-compose up -d
+
+## list container mentsioned in the docker compose
+
+    docker compose ps
+
+## down docker comose
+
+    docker-componse down
+
+kubectl clusrer-info
+
+## setup
+
+create folder $HOME/.kube/
+donwload k8s-cfdsa-kubeconfig.yaml to $HOME/.kube/
+cp k8s-cfdsa-kubeconfig.yaml config
+
+## 1. create namespace, configmap and secret
+
+    kubectl apply -f config.yaml
+
+## 2. run db deployment and services
+
+    kubectl apply -f bggdb.yaml
+
+## 3. run app deployment and services
+
+    kubectl apply -f bggapp.yaml
+
+## 4. get namespace
+
+kubectl get namespace
+
+## 5. configmap
+
+    kubectl get configmaps -n bggns
+    kubectl describe configmap bgg-cm  -n bggns
+
+## 6. secret
+
+kubectl get secrets -n bggns
+
+## 7. list all deployments
+
+    kubectl get deployments -n bggns
+    kubectl describe deployment bggdb-deploy -n bggns
+
+## 8. list all services
+
+    kubectl get services -n bggns
+     kubectl describe  service bggdb-svc -n bggns
