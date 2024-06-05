@@ -1,0 +1,58 @@
+Helm
+
+helm version
+https://artifacthub.io/
+
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+
+helm repo list
+helm repo update 
+helm search repo mysql
+helm search repo nginx
+
+ 
+
+ helm install my-ingress ingress-nginx/ingress-nginx -ningress-nginx --create-namespace
+ watch kubectl get all -ningress-nginx  
+ helm ls -A
+ kubectl get all -n ingress-nginx
+
+ helm uninstall my-ingress -n ingress-nginx
+
+
+kubectl get pods -n bggns
+ kubectl -ti podname  -- /bin/sh
+
+storage class : 
+==================
+ kubectl  get ss
+ kubectl get  sc
+
+
+ingress
+=======
+ingress controller
+
+
+kubectl  get ingressClass
+nginx controller annodations
+
+tools  :
+ https://k9scli.io/topics/install/
+ nip.io
+
+
+
+
+
+docker run -d \
+  --name=code-server \
+  -e TZ=Asia/Singapore \
+  -e PASSWORD=password \
+  -e SUDO_PASSWORD=password \
+  -e DEFAULT_WORKSPACE=/config/workspace \
+  -p 8443:8443 \
+  -e PROXY_DOMAIN=code-<IP>.nip.io \
+  -v workspace-vol:/config/workspace \
+  linuxserver/code-server:amd64-<version tag>
+

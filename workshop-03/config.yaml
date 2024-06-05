@@ -1,0 +1,36 @@
+---
+apiVersion: v1 
+kind: Namespace
+metadata:
+  name: codeserver-ns
+  labels:
+    kubernetes.io/metadata.name: codeserver-ns
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: codeserver-cm
+  namespace: codeserver-ns
+  labels:
+    app: codeserver
+    name: codeserver-cm
+data:
+  DEFAULT_WORKSPACE: /config/workspace
+  TZ: Asia/Singapore
+  PROXY_DOMAIN: codeserver-104.248.97.98.nip.io  
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: codeserver-secret
+  namespace: codeserver-ns
+  labels:
+    app: codeserver
+    name: codeserver-secret
+type: Opaque
+data:
+  # password => changeit
+  PASSWORD: Y2hhbmdlaXQ=
+  SUDO_PASSWORD: Y2hhbmdlaXQ=
