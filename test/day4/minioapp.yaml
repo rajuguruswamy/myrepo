@@ -1,0 +1,95 @@
+---
+apiVersion: v1 
+kind: Namespace
+metadata:
+  name: minio-ns
+  labels:
+    app: minio
+    name: minio-ns
+
+---
+apiVersion: v1 
+kind: Service 
+metadata: 
+  name: min-hsvc 
+  namespace: minio-ns 
+  labels: 
+    app: minio 
+    name: minio-hsvc 
+spec:
+  clusterIP: None
+  selector:
+    app: minio
+    name: minio-pod 
+  ports:
+  - port: 9000 
+    targetPort: 9000
+  
+--- 
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: minio-sts
+  namespace: minio-ns 
+  labels:
+    app: minio
+    name: minio-sts
+spec:
+   replicas: 4
+   selector: 
+    matchLabels:
+      app: minio
+      name: minio-pod 
+   serviceName: minio-hsvc
+   template:
+     metadata:
+      name: minio-pod
+      namespace: minio-ns
+      labels:
+        app: minio
+        name: minio-pod
+      spec:
+         securityContext:
+          fsGroup: 1001
+         containers:
+           name:  minio-container
+           image: bitnami/minio:2024.6.4
+           imagePullPolicy: IfNotPresent
+           args: 
+           - minio 
+           - server 
+           - --address=:9000 
+           - --console-address=:9090
+           - http://minio-sts-{0...3}.minio-hsvc.minio.svc.cluster.local/opt/data/  
+           env:
+            - name: MINIO_ROOT_USER
+              value: "root"
+            - name: MINIO_ROOT_PASSWORD
+              value: "changeit"
+            - name: MINIO_DATA_DIR
+              value: "/opt/data"
+            - name: MINIO_CI_CD
+              value: "1"
+         
+           ports:
+            - containerPort: 9000
+              hostPort: 9000
+           volumeMounts:
+           - name: minio-pvc
+             mountPath: /opt/data/  
+        
+   volumeClaimTemplates:
+   - metadata:
+       name: minio-pvc
+       namespace: minio-ns
+       labels:
+          app: minio
+          name: minio-pvc
+     spec:
+      accessModes:
+        - ReadWriteOnce
+      storageClassName: do-block-storage
+      resources:
+        requests:
+          storage: 1Gi
+

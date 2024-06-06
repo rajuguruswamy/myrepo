@@ -1,0 +1,28 @@
+Scaling
+=======
+
+ kubectl config get-users
+ kubectl config get-clusters
+ kubectl config get-contexts
+
+
+Kustomize -tool 
+Kustomize.io
+
+
+Terragrunt
+
+
+k run netshoot -ti -rm --image=nicolaka/netshoot  --/bin/sh
+
+
+
+k get po -n dovns
+k get po -n dovns -owide
+nslookup dov-svc.dovns.svc.cluster.local
+nicolaka
+
+headless service:
+
+
+

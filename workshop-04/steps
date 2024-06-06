@@ -1,0 +1,14 @@
+1. create namesapce  minio
+2. create configMap minio-cm to store MINIO_ROOT_USER , MINIO_DATA_DIR and MINIO_ROOT_USER
+3. create Secret  minio-secret to store MINIO_ROOT_PASSWORD 
+4. create headless service  minio-hsvc and define dataport 9000 and console port 9090
+    clusterIP = None
+    selector name : minio-pod 
+    dataport 9000 
+    console port 9090
+
+5. create StarefulSet minio-sts
+        serviceName -> minio-hsvc
+        selector name : minio-pod 
+        replicas = 4
+        

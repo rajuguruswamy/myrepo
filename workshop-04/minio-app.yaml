@@ -1,0 +1,139 @@
+---
+apiVersion: v1 
+kind: Service 
+metadata: 
+  name: minio-hsvc 
+  namespace: minio
+  labels: 
+    app: minio
+    name: minio-hsvc 
+spec:
+  clusterIP: None
+  selector:
+    app: minio
+    name: minio-pod 
+  ports:
+  - name: data-port 
+    port: 9000
+    targetPort: 9000
+  - name: console-port 
+    port: 9090
+    targetPort: 9090
+
+---
+apiVersion: apps/v1 
+kind: StatefulSet 
+metadata: 
+  name: minio-sts
+  namespace: minio
+  labels: 
+    app: minio
+    name: minio-sts 
+spec:
+  serviceName: minio-hsvc
+  replicas: 4
+  selector:
+    matchLabels:
+      app: minio
+      name: minio-pod 
+  volumeClaimTemplates: 
+  - apiVersion: v1 
+    kind: PersistentVolumeClaim
+    metadata: 
+      name: minio-pvc
+      labels: 
+        app: minio
+        name: minio-pvc 
+    spec: 
+      storageClassName: do-block-storage 
+      accessModes: [ ReadWriteOncePod ]
+      resources: 
+        requests: 
+          storage: 1Gi
+  template:
+    metadata: 
+      name: minio-pod 
+      labels: 
+        app: minio
+        name: minio-pod 
+    spec:
+      securityContext:
+        fsGroup: 1001
+      containers:
+      - name: minio-container 
+        image: bitnami/minio:2024.6.4
+        imagePullPolicy: IfNotPresent
+        command: 
+        - minio 
+        - server 
+        - --address=:9000
+        - --console-address=:9090
+        - http://minio-sts-{0...3}.minio-hsvc.minio.svc.cluster.local
+        envFrom:
+        - configMapRef:
+            name: minio-cm
+        - secretRef:
+            name: minio-secret
+        ports:
+        - name: data-port 
+          containerPort: 9000
+        - name: console-port 
+          containerPort: 9090
+        volumeMounts:
+        - name: minio-pvc
+          mountPath: /bitnami/minio/data
+
+---
+apiVersion: v1 
+kind: Service 
+metadata:
+  name: minio-svc
+  namespace: minio
+  labels:
+    app: minio
+    name: minio-svc-console 
+spec: 
+  type: ClusterIP
+  selector:
+    app: minio
+    name: minio-pod 
+  ports:
+  - name: data-port 
+    port: 9000
+    targetPort: data-port
+  - name: console-port 
+    port: 9090
+    targetPort: console-port
+
+--- 
+apiVersion: networking.k8s.io/v1 
+kind: Ingress 
+metadata: 
+  name: minio-ing
+  namespace: minio 
+  labels:
+    app: minio
+    name: minio-ing
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: console-104.248.97.98.nip.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix 
+        backend:
+          service:
+            name: minio-svc 
+            port:
+              name: console-port
+  - host: data-104.248.97.98.nip.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix 
+        backend:
+          service:
+            name: minio-svc 
+            port:
+              name: data-port
