@@ -1,11 +1,11 @@
-# Docker commands
+## Docker commands
 
 docker build
 docker pull
 docker run
 docker version
 
-# docker file
+## docker file
 
 FROM node:20
 LABEL name=myapp
@@ -18,102 +18,102 @@ ENV APP_PORT=3000
 EXPOSE ${APP_PORT}
 ENTRYPOINT node main.js ${APP_PORT}
 
-# build an image
+## build an image
 
 docker build --build-arg APP_DIR=/tmp –t myapp:v1
 
-# Starting a Docker Container :
+## Starting a Docker Container :
 
 docker container run –d –p 8080:3000 --name app myapp:v1
 
-# Port Binding : -p flag
+## Port Binding : -p flag
 
 docker run –d –p 8080:3000 --name app myapp:v1
 
-# Setting Environment Variables : -e flag
+## Setting Environment Variables : -e flag
 
 docker run –d –p 8080:5000 -e APP_PORT=5000 --name app myapp:v1
 
-# List all running containers
+## List all running containers
 
 docker container ps
 
-# Stop a container
+## Stop a container
 
 docker container stop mycontainer
 
-# Start a container
+## Start a container
 
 docker container start mycontainer
 
-# Delete a container
+## Delete a container
 
 docker container rm mycontainer
 
-# List all images
+## List all images
 
 docker image ls
 
-# remove docker image
+## remove docker image
 
 docker rmi myimage:v1
 
-# Running Command Inside Containers
+## Running Command Inside Containers
 
 docker container exec -ti mycontainer ls -l
 
 ## Pushing Images to Container Registry
 
-# Login to Docker hub
+## Login to Docker hub
 
        docker login -u fred
 
-# Login to other container registry eg. Github
+## Login to other container registry eg. Github
 
 echo $PASSWORD | docker login ghcr.io -u fred --password-stdin
 
-# Push or pull from container registry
+## Push or pull from container registry
 
 docker push fred/myapp:v1
 docker pull ghcr.io/fred/myapp:v1
 
-# view Image Layers
+## view Image Layers
 
 docker history myapp:v1
 
-# Observability - Docker
+## Observability - Docker
 
 HEALTHCHECK --interval=12s --timeout=12s --start-period=30s \  
 CMD curl -s -f http://localhost:${APP_PORT}/ready > /dev/null || exit 1
 
-# Two ways of mapping external storage into Docker
+## Two ways of mapping external storage into Docker
 
     Bind mount - mount a directory from the Docker host into the container
     Volume mount - create a Docker volume and mount the volume into the container
 
-# Bind Mount
+## Bind Mount
 
 docker run –d –p 8080:3000 –-mount type=bind,src=/opt/shared,dst=/app/public,readonly --name app myapp:v1
 
 ## Volume Management
 
-# Create a volume
+## Create a volume
 
     docker volume create myvol
 
-# List available volumes
+## List available volumes
 
     docker volume ls
 
-# Display the properties of a volume
+## Display the properties of a volume
 
     docker volume inspect myvol
 
-# Delete a volume
+## Delete a volume
 
     docker volume rm myvol
 
-# Creating and Mounting a Volume
+## Creating and Mounting a Volume
 
     docker volume create shared
     docker run –d –p 3000-3100:3000  --mount type=volume,src=shared,dst=/app/public  --name app0 myapp:v1
@@ -124,7 +124,7 @@ Docker Network - Bridge
 Docker Network - Host
 Docker Networking - Overlay
 
-# Attaching to Network
+## Attaching to Network
 
     docker run –d –p 8080:3000 --name app myapp:v1
 
@@ -134,21 +134,21 @@ Docker Networking - Overlay
 
     docker network inspect mynet --format `{{json .Containers}}`
 
-# Network Management
+## Network Management
 
-# Create a network
+## Create a network
 
     docker network create -d bridge mynet
 
-# List available network
+## List available network
 
      docker network ls
 
-# Display network properties
+## Display network properties
 
     docker network inspect mynet
 
-# Delete a network
+## Delete a network
 
     docker network rm mynet
 
@@ -162,7 +162,7 @@ docker run –d --network app-net --name db northwind-db:v1
 
 docker run –d –p 8080:3000 -v data:/app/public --network app-net --name app nortwind-app:v1
 
-# Docker Networking - Macvlan
+## Docker Networking - Macvlan
 
 ## docker compose
 
@@ -227,6 +227,6 @@ kubectl get secrets -n bggns
 
     kubectl delete -f bggdb.yaml
 
-## 11. delete app deployment and services
+### 11. delete app deployment and services
 
     kubectl delete -f bggapp.yaml
