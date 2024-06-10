@@ -176,7 +176,7 @@ docker run –d –p 8080:3000 -v data:/app/public --network app-net --name app 
 
     docker-componse down
 
-kubectl clusrer-info
+kubectl cluster-info
 
 ### setup
 
